@@ -1,7 +1,7 @@
 #' Function to compute Simpson's Index for each data point, given a kNN
 #' @export
 compute_simpson_from_knn <- function(dknn, batch_labels) {
-  perplexity <- ncol(dknn$nn.index) / 3
+  perplexity <- ncol(dknn$nn.idx) / 3
   batch_labels <- as.integer(factor(batch_labels)) - 1
   n_batches <- length(unique(batch_labels))
   lambda <- compute_diversity_Cpp(t(dknn$nn.dists), t(dknn$nn.idx) - 1, 
