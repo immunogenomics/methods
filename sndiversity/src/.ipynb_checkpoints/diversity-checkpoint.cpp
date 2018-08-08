@@ -25,7 +25,7 @@ arma::vec compute_diversity_Cpp(arma::mat& D, arma::umat& knn_idx, arma::vec& ba
                 float perplexity = 15, float tol = 1e-5) {
   int n = D.n_cols;
   arma::vec P = zeros<arma::vec>(D.n_rows);
-  arma::vec diversity = zeros<arma::vec>(n);
+  arma::vec simpson = zeros<arma::vec>(n);
   float logU = log(perplexity);
 
   float hbeta, beta, betamin, betamax, H, Hdiff;
@@ -54,14 +54,37 @@ arma::vec compute_diversity_Cpp(arma::mat& D, arma::umat& knn_idx, arma::vec& ba
       tries++;
     }
 
-    // then compute diversity
+    if (H == 0) {
+      simpson.row(i) = -1;
+      continue;
+    }
+    
+    // then compute Simpson's Index
     for (int b = 0; b < n_batches; b++) {
       uvec q = find(batch_labels.elem(knn_idx.col(i)) == b); // indices of cells belonging to batch (b)
       if (q.n_elem > 0) {
         float sumP = sum(P.elem(q));
-        diversity.row(i) += sumP * sumP;         
+        simpson.row(i) += sumP * sumP;         
       }
     }
   }
-  return(diversity);
+  return(simpson);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
