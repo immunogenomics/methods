@@ -1,0 +1,12 @@
+Package: wilcoxauc
+Title: Fast Functions for Differential Expression using Wilcox and AUC
+Version: 0.0.0.9000
+Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Description: What the package does (one paragraph).
+Depends: R (>= 3.4.0), dplyr, magrittr, Matrix
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports: Rcpp, dplyr, magrittr, Matrix
+LinkingTo: Rcpp, RcppArmadillo
+RoxygenNote: 6.0.1.9000
