@@ -18,9 +18,12 @@ bh.adjust <- function(x, log = FALSE) {
 
 fast_wilcox <- function(Xt, cols) {
     Xr = Matrix(Xt, sparse = TRUE)
+    if (any(Xr < 0)) {
+        stop("ERROR: Wilcox function does not support negative values yet.")
+    }
 ##    Xr@x <- as.numeric(rank_vec(Xr@x, Xr@p, nrow(Xr), ncol(Xr), "mean"))
-    rank_vec(Xr@x, Xr@p, nrow(Xr), ncol(Xr), "mean")  
-  
+    rank_vec(Xr@x, Xr@p, nrow(Xr), ncol(Xr), "mean")
+    
     grs <- sumGroups(Xr@x, Xr@p, Xr@i, ncol(Xr), as.integer(cols) - 1, length(unique(cols)))
 
     # calculate number of non-zero entries per group
@@ -28,26 +31,29 @@ fast_wilcox <- function(Xt, cols) {
     group.size <- as.numeric(table(cols))
 
     # add contribution of zero entries to the grs
-    gnz <- (group.size-gnzz)
+    gnz <- (group.size - gnzz)
 
     # rank of a 0 entry for each gene
     zero.ranks <- (nrow(Xr) - diff(Xr@p) + 1) / 2
     ustat <- t((t(gnz) * zero.ranks)) + grs - group.size * (group.size + 1 ) / 2
-
+        
     # standardize to get Z-score and pval
     n1n2 <- group.size * (nrow(Xr) - group.size);
-##    usigma <- sqrt((nrow(Xr) + 1 - (colSums(gnz)^3 - colSums(gnz)) / (nrow(Xr) * (nrow(Xr) - 1))) * n1n2 / 12)  
-    usigma <- sqrt((nrow(Xr) + 1 - (gnz ^ 3 - gnz) / (nrow(Xr) * (nrow(Xr) - 1))) * n1n2 / 12)
-    ustat_norm <- t((ustat - (n1n2 / 2)) / usigma)    
-    pvals <- ustat_norm %>% abs %>% as.numeric %>% 
-        pnorm(lower.tail = FALSE, log.p = TRUE) %>%
+#     usigma <- sqrt((nrow(Xr) + 1 - (gnz ^ 3 - gnz) / (nrow(Xr) * (nrow(Xr) - 1))) * n1n2 / 12)
+    .x <- t(matrix(rep(colSums(gnz) ^ 3 - colSums(gnz), nrow(gnz)), ncol(gnz), nrow(gnz)))
+    usigma <- sqrt((nrow(Xr) + 1 - .x / (nrow(Xr) * (nrow(Xr) - 1))) * n1n2 / 12)
+
+    ustat_norm <- t((ustat - (n1n2 / 2)) / usigma)
+#    pvals <- ustat_norm %>% as.numeric %>% 
+     pvals <- ustat_norm %>% abs %>% as.numeric %>% 
+        pnorm(lower.tail = FALSE, log.p = TRUE) %>% 
         bh.adjust(log = TRUE) %>% 
-#        qnorm(lower.tail = FALSE, log.p = TRUE) %>% 
+#         qnorm(lower.tail = FALSE, log.p = TRUE) %>% 
         matrix(ncol = ncol(ustat_norm))
-    pvals <- pvals * sign(ustat_norm)
+    pvals <- -pvals * sign(ustat_norm)
     rownames(pvals) <- colnames(Xr)
     colnames(pvals) <- levels(cols)[1:ncol(pvals)]
-    
+  
     ## compute auROC from ustat
     auc = matrix(t(ustat / n1n2), ncol = ncol(pvals))
     rownames(auc) <- colnames(Xr)
