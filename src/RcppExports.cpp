@@ -7,35 +7,96 @@
 
 using namespace Rcpp;
 
-// inPlaceRankMean
-int inPlaceRankMean(vec& v_temp, int idx_begin, int idx_end);
-RcppExport SEXP _wilcoxauc_inPlaceRankMean(SEXP v_tempSEXP, SEXP idx_beginSEXP, SEXP idx_endSEXP) {
+// cpp_sumGroups_dgc
+mat cpp_sumGroups_dgc(const vec& x, const uvec& p, const vec& i, unsigned ncol, const uvec& groups, unsigned ngroups);
+RcppExport SEXP _wilcoxauc_cpp_sumGroups_dgc(SEXP xSEXP, SEXP pSEXP, SEXP iSEXP, SEXP ncolSEXP, SEXP groupsSEXP, SEXP ngroupsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const vec& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const uvec& >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const vec& >::type i(iSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type ncol(ncolSEXP);
+    Rcpp::traits::input_parameter< const uvec& >::type groups(groupsSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type ngroups(ngroupsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_sumGroups_dgc(x, p, i, ncol, groups, ngroups));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_sumGroups_dgc_T
+mat cpp_sumGroups_dgc_T(const vec& x, const vec& p, const vec& i, int ncol, int nrow, const uvec& groups, int ngroups);
+RcppExport SEXP _wilcoxauc_cpp_sumGroups_dgc_T(SEXP xSEXP, SEXP pSEXP, SEXP iSEXP, SEXP ncolSEXP, SEXP nrowSEXP, SEXP groupsSEXP, SEXP ngroupsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const vec& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const vec& >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const vec& >::type i(iSEXP);
+    Rcpp::traits::input_parameter< int >::type ncol(ncolSEXP);
+    Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
+    Rcpp::traits::input_parameter< const uvec& >::type groups(groupsSEXP);
+    Rcpp::traits::input_parameter< int >::type ngroups(ngroupsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_sumGroups_dgc_T(x, p, i, ncol, nrow, groups, ngroups));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_sumGroups_dense
+mat cpp_sumGroups_dense(const mat& X, const uvec& groups, unsigned ngroups);
+RcppExport SEXP _wilcoxauc_cpp_sumGroups_dense(SEXP XSEXP, SEXP groupsSEXP, SEXP ngroupsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const uvec& >::type groups(groupsSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type ngroups(ngroupsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_sumGroups_dense(X, groups, ngroups));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_sumGroups_dense_T
+mat cpp_sumGroups_dense_T(const mat& X, const uvec& groups, unsigned ngroups);
+RcppExport SEXP _wilcoxauc_cpp_sumGroups_dense_T(SEXP XSEXP, SEXP groupsSEXP, SEXP ngroupsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const uvec& >::type groups(groupsSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type ngroups(ngroupsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_sumGroups_dense_T(X, groups, ngroups));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_nnzeroGroups_dgc
+mat cpp_nnzeroGroups_dgc(const uvec& p, const vec& i, unsigned ncol, const uvec& groups, unsigned ngroups);
+RcppExport SEXP _wilcoxauc_cpp_nnzeroGroups_dgc(SEXP pSEXP, SEXP iSEXP, SEXP ncolSEXP, SEXP groupsSEXP, SEXP ngroupsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const uvec& >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const vec& >::type i(iSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type ncol(ncolSEXP);
+    Rcpp::traits::input_parameter< const uvec& >::type groups(groupsSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type ngroups(ngroupsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_nnzeroGroups_dgc(p, i, ncol, groups, ngroups));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_in_place_rank_mean
+int cpp_in_place_rank_mean(vec& v_temp, int idx_begin, int idx_end);
+RcppExport SEXP _wilcoxauc_cpp_in_place_rank_mean(SEXP v_tempSEXP, SEXP idx_beginSEXP, SEXP idx_endSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< vec& >::type v_temp(v_tempSEXP);
     Rcpp::traits::input_parameter< int >::type idx_begin(idx_beginSEXP);
     Rcpp::traits::input_parameter< int >::type idx_end(idx_endSEXP);
-    rcpp_result_gen = Rcpp::wrap(inPlaceRankMean(v_temp, idx_begin, idx_end));
+    rcpp_result_gen = Rcpp::wrap(cpp_in_place_rank_mean(v_temp, idx_begin, idx_end));
     return rcpp_result_gen;
 END_RCPP
 }
-// inPlaceRankMin
-int inPlaceRankMin(vec& v_temp, int idx_begin, int idx_end);
-RcppExport SEXP _wilcoxauc_inPlaceRankMin(SEXP v_tempSEXP, SEXP idx_beginSEXP, SEXP idx_endSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< vec& >::type v_temp(v_tempSEXP);
-    Rcpp::traits::input_parameter< int >::type idx_begin(idx_beginSEXP);
-    Rcpp::traits::input_parameter< int >::type idx_end(idx_endSEXP);
-    rcpp_result_gen = Rcpp::wrap(inPlaceRankMin(v_temp, idx_begin, idx_end));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rank_vec
-int rank_vec(vec& x, const vec& p, int nrow, int ncol, std::string method);
-RcppExport SEXP _wilcoxauc_rank_vec(SEXP xSEXP, SEXP pSEXP, SEXP nrowSEXP, SEXP ncolSEXP, SEXP methodSEXP) {
+// cpp_rank_matrix_dgc
+int cpp_rank_matrix_dgc(vec& x, const vec& p, int nrow, int ncol);
+RcppExport SEXP _wilcoxauc_cpp_rank_matrix_dgc(SEXP xSEXP, SEXP pSEXP, SEXP nrowSEXP, SEXP ncolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -43,85 +104,48 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const vec& >::type p(pSEXP);
     Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
     Rcpp::traits::input_parameter< int >::type ncol(ncolSEXP);
-    Rcpp::traits::input_parameter< std::string >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(rank_vec(x, p, nrow, ncol, method));
+    rcpp_result_gen = Rcpp::wrap(cpp_rank_matrix_dgc(x, p, nrow, ncol));
     return rcpp_result_gen;
 END_RCPP
 }
-// sumGroups
-mat sumGroups(const vec& x, const vec& p, const vec& i, int ncol, const uvec& groups, int ngroups);
-RcppExport SEXP _wilcoxauc_sumGroups(SEXP xSEXP, SEXP pSEXP, SEXP iSEXP, SEXP ncolSEXP, SEXP groupsSEXP, SEXP ngroupsSEXP) {
+// cpp_rank_matrix_dense
+mat cpp_rank_matrix_dense(mat& X);
+RcppExport SEXP _wilcoxauc_cpp_rank_matrix_dense(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const vec& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const vec& >::type p(pSEXP);
-    Rcpp::traits::input_parameter< const vec& >::type i(iSEXP);
-    Rcpp::traits::input_parameter< int >::type ncol(ncolSEXP);
-    Rcpp::traits::input_parameter< const uvec& >::type groups(groupsSEXP);
-    Rcpp::traits::input_parameter< int >::type ngroups(ngroupsSEXP);
-    rcpp_result_gen = Rcpp::wrap(sumGroups(x, p, i, ncol, groups, ngroups));
+    Rcpp::traits::input_parameter< mat& >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_rank_matrix_dense(X));
     return rcpp_result_gen;
 END_RCPP
 }
-// nnzeroGroups
-mat nnzeroGroups(const vec& p, const vec& i, int ncol, const uvec& groups, int ngroups);
-RcppExport SEXP _wilcoxauc_nnzeroGroups(SEXP pSEXP, SEXP iSEXP, SEXP ncolSEXP, SEXP groupsSEXP, SEXP ngroupsSEXP) {
+// cpp_nnzeroGroups_dgc_T
+mat cpp_nnzeroGroups_dgc_T(const vec& p, const vec& i, int ncol, int nrow, const uvec& groups, int ngroups);
+RcppExport SEXP _wilcoxauc_cpp_nnzeroGroups_dgc_T(SEXP pSEXP, SEXP iSEXP, SEXP ncolSEXP, SEXP nrowSEXP, SEXP groupsSEXP, SEXP ngroupsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const vec& >::type p(pSEXP);
-    Rcpp::traits::input_parameter< const vec& >::type i(iSEXP);
-    Rcpp::traits::input_parameter< int >::type ncol(ncolSEXP);
-    Rcpp::traits::input_parameter< const uvec& >::type groups(groupsSEXP);
-    Rcpp::traits::input_parameter< int >::type ngroups(ngroupsSEXP);
-    rcpp_result_gen = Rcpp::wrap(nnzeroGroups(p, i, ncol, groups, ngroups));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sumGroupsT
-mat sumGroupsT(const vec& x, const vec& p, const vec& i, int ncol, int nrow, const uvec& groups, int ngroups);
-RcppExport SEXP _wilcoxauc_sumGroupsT(SEXP xSEXP, SEXP pSEXP, SEXP iSEXP, SEXP ncolSEXP, SEXP nrowSEXP, SEXP groupsSEXP, SEXP ngroupsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const vec& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const vec& >::type p(pSEXP);
     Rcpp::traits::input_parameter< const vec& >::type i(iSEXP);
     Rcpp::traits::input_parameter< int >::type ncol(ncolSEXP);
     Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
     Rcpp::traits::input_parameter< const uvec& >::type groups(groupsSEXP);
     Rcpp::traits::input_parameter< int >::type ngroups(ngroupsSEXP);
-    rcpp_result_gen = Rcpp::wrap(sumGroupsT(x, p, i, ncol, nrow, groups, ngroups));
-    return rcpp_result_gen;
-END_RCPP
-}
-// nnzeroGroupsT
-mat nnzeroGroupsT(const vec& x, const vec& p, const vec& i, int ncol, int nrow, const uvec& groups, int ngroups);
-RcppExport SEXP _wilcoxauc_nnzeroGroupsT(SEXP xSEXP, SEXP pSEXP, SEXP iSEXP, SEXP ncolSEXP, SEXP nrowSEXP, SEXP groupsSEXP, SEXP ngroupsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const vec& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const vec& >::type p(pSEXP);
-    Rcpp::traits::input_parameter< const vec& >::type i(iSEXP);
-    Rcpp::traits::input_parameter< int >::type ncol(ncolSEXP);
-    Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
-    Rcpp::traits::input_parameter< const uvec& >::type groups(groupsSEXP);
-    Rcpp::traits::input_parameter< int >::type ngroups(ngroupsSEXP);
-    rcpp_result_gen = Rcpp::wrap(nnzeroGroupsT(x, p, i, ncol, nrow, groups, ngroups));
+    rcpp_result_gen = Rcpp::wrap(cpp_nnzeroGroups_dgc_T(p, i, ncol, nrow, groups, ngroups));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_wilcoxauc_inPlaceRankMean", (DL_FUNC) &_wilcoxauc_inPlaceRankMean, 3},
-    {"_wilcoxauc_inPlaceRankMin", (DL_FUNC) &_wilcoxauc_inPlaceRankMin, 3},
-    {"_wilcoxauc_rank_vec", (DL_FUNC) &_wilcoxauc_rank_vec, 5},
-    {"_wilcoxauc_sumGroups", (DL_FUNC) &_wilcoxauc_sumGroups, 6},
-    {"_wilcoxauc_nnzeroGroups", (DL_FUNC) &_wilcoxauc_nnzeroGroups, 5},
-    {"_wilcoxauc_sumGroupsT", (DL_FUNC) &_wilcoxauc_sumGroupsT, 7},
-    {"_wilcoxauc_nnzeroGroupsT", (DL_FUNC) &_wilcoxauc_nnzeroGroupsT, 7},
+    {"_wilcoxauc_cpp_sumGroups_dgc", (DL_FUNC) &_wilcoxauc_cpp_sumGroups_dgc, 6},
+    {"_wilcoxauc_cpp_sumGroups_dgc_T", (DL_FUNC) &_wilcoxauc_cpp_sumGroups_dgc_T, 7},
+    {"_wilcoxauc_cpp_sumGroups_dense", (DL_FUNC) &_wilcoxauc_cpp_sumGroups_dense, 3},
+    {"_wilcoxauc_cpp_sumGroups_dense_T", (DL_FUNC) &_wilcoxauc_cpp_sumGroups_dense_T, 3},
+    {"_wilcoxauc_cpp_nnzeroGroups_dgc", (DL_FUNC) &_wilcoxauc_cpp_nnzeroGroups_dgc, 5},
+    {"_wilcoxauc_cpp_in_place_rank_mean", (DL_FUNC) &_wilcoxauc_cpp_in_place_rank_mean, 3},
+    {"_wilcoxauc_cpp_rank_matrix_dgc", (DL_FUNC) &_wilcoxauc_cpp_rank_matrix_dgc, 4},
+    {"_wilcoxauc_cpp_rank_matrix_dense", (DL_FUNC) &_wilcoxauc_cpp_rank_matrix_dense, 1},
+    {"_wilcoxauc_cpp_nnzeroGroups_dgc_T", (DL_FUNC) &_wilcoxauc_cpp_nnzeroGroups_dgc_T, 6},
     {NULL, NULL, 0}
 };
 
