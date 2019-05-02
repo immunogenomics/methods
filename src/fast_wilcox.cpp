@@ -79,12 +79,15 @@ mat cpp_nnzeroGroups_dgc(const uvec& p, const vec& i, unsigned ncol, const uvec&
 
 
 // [[Rcpp::export]]
-int cpp_in_place_rank_mean(vec& v_temp, int idx_begin, int idx_end) {
-    if (idx_begin > idx_end) return 1;
+std::list<float> cpp_in_place_rank_mean(vec& v_temp, int idx_begin, int idx_end) {
+    std::list<float> ties;
+    
+    if (idx_begin > idx_end) return ties;
     std::vector<pair<float, size_t> > v_sort(idx_end - idx_begin + 1);
     for (size_t i = idx_begin; i <= idx_end; i++) {
         v_sort[i - idx_begin] = make_pair(v_temp[i], i - idx_begin);
     }
+    
     
     sort(v_sort.begin(), v_sort.end());
 
@@ -99,6 +102,7 @@ int cpp_in_place_rank_mean(vec& v_temp, int idx_begin, int idx_end) {
             }            
             // restart count ranks
             rank_sum = i;
+            if (n > 1) ties.push_back(n);
             n = 1;
         } else {
             // if curr val is a tie, 
@@ -110,31 +114,33 @@ int cpp_in_place_rank_mean(vec& v_temp, int idx_begin, int idx_end) {
     // set the last element(s)
     for (unsigned j = 0; j < n; j++)
         v_temp[v_sort[i - 1 - j].second + idx_begin] = (rank_sum / n) + 1;  
-  return 0;
+
+    return ties;
 }
 
 
 // [[Rcpp::export]]
-int cpp_rank_matrix_dgc(vec& x, const vec& p, int nrow, int ncol) { //, std::string method) {
+std::vector<std::list<float> > cpp_rank_matrix_dgc(vec& x, const vec& p, int nrow, int ncol) { //, std::string method) {
 //   omp_set_num_threads(8);
 //   #pragma omp parallel for
-  for (int i = 0; i < ncol; i++) {
-    if (p[i+1] == p[i]) continue;
-    int n_zero = nrow - (p[i+1] - p[i]);
-//     if (method == "mean") {
-      cpp_in_place_rank_mean(x, p[i], p[i + 1] - 1);        
-//     } else if (method == "min") {
-//         cpp_in_place_rank_min(x, p[i], p[i + 1] - 1);        
-//     }
-    x.rows(p[i], p[i + 1] - 1) += n_zero;
-  }
-//  return x;
-  return 0;
+    vector<list<float> > ties(ncol);
+    int n_zero;
+    for (int i = 0; i < ncol; i++) {
+        if (p[i+1] == p[i]) continue;
+        n_zero = nrow - (p[i+1] - p[i]);
+        ties[i] = cpp_in_place_rank_mean(x, p[i], p[i + 1] - 1);
+        ties[i].push_back(n_zero);
+        x.rows(p[i], p[i + 1] - 1) += n_zero;
+    }
+    return ties;
 }
 
 
 // [[Rcpp::export]]
-mat cpp_rank_matrix_dense(mat& X) {    
+Rcpp::List cpp_rank_matrix_dense(mat X) {
+    // sizes of tied groups
+    vector<list<float> > ties(X.n_cols);
+    
     for (unsigned c = 0; c < X.n_cols; c++) {
         std::vector<pair<float, size_t> > v_sort(X.n_rows);
         for (size_t i = 0; i < X.n_rows; i++) {
@@ -143,7 +149,7 @@ mat cpp_rank_matrix_dense(mat& X) {
 
         sort(v_sort.begin(), v_sort.end());
 
-        float rank_sum = 0, n = 1;    
+        float rank_sum = 0, n = 1;
         size_t i;
         for (i = 1U; i < v_sort.size(); i++) {
             if (v_sort[i].first != v_sort[i - 1].first) {
@@ -154,6 +160,7 @@ mat cpp_rank_matrix_dense(mat& X) {
                 }            
                 // restart count ranks
                 rank_sum = i;
+                if (n > 1) ties[c].push_back(n);
                 n = 1;
             } else {
                 // if curr val is a tie, 
@@ -166,7 +173,7 @@ mat cpp_rank_matrix_dense(mat& X) {
         for (unsigned j = 0; j < n; j++)
             X.col(c)[v_sort[i - 1 - j].second] = (rank_sum / n) + 1;
     }
-    return X;    
+    return Rcpp::List::create(Named("X_ranked") = X, Named("ties") = ties);
 }
 
 

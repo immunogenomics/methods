@@ -1,17 +1,10 @@
-## BH P-value adjustment with a log option
-bh.adjust <- function(x, log = FALSE) {
-  nai <- which(!is.na(x))
-  ox <- x
-  x <- x[nai]
-  id <- order(x, decreasing = FALSE)
-  if(log) {
-    q <- x[id] + log(length(x)/seq_along(x))
-  } else {
-    q <- x[id]*length(x)/seq_along(x)
-  }
-  a <- rev(cummin(rev(q)))[order(id)]
-  ox[nai] <- a
-  ox
+compute_usigma <- function(ties, N, n1n2) {
+    .x1 <- N ^ 3 - N
+    .x2 <- 1 / (12 * (N^2 - N))
+    rhs <- lapply(ties, function(tvals) {
+        (.x1 - sum(tvals ^ 3 - tvals)) * .x2
+    }) %>% unlist
+    sqrt(matrix(n1n2, ncol = 1) %*% matrix(rhs, nrow = 1))
 }
 
 rank_matrix <- function(X) {
@@ -20,12 +13,12 @@ rank_matrix <- function(X) {
 
 rank_matrix.dgCMatrix <- function(X) {
     Xr <- Matrix(X, sparse = TRUE)
-    cpp_rank_matrix_dgc(Xr@x, Xr@p, nrow(Xr), ncol(Xr))
-    return(Xr)
+    ties <- cpp_rank_matrix_dgc(Xr@x, Xr@p, nrow(Xr), ncol(Xr))
+    return(list(X_ranked = Xr, ties = ties))
 }
 
 rank_matrix.matrix <- function(X) {
-    return(cpp_rank_matrix_dense(X))
+    cpp_rank_matrix_dense(X)
 }
 
 

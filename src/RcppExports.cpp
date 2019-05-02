@@ -82,7 +82,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_in_place_rank_mean
-int cpp_in_place_rank_mean(vec& v_temp, int idx_begin, int idx_end);
+std::list<float> cpp_in_place_rank_mean(vec& v_temp, int idx_begin, int idx_end);
 RcppExport SEXP _wilcoxauc_cpp_in_place_rank_mean(SEXP v_tempSEXP, SEXP idx_beginSEXP, SEXP idx_endSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -95,7 +95,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_rank_matrix_dgc
-int cpp_rank_matrix_dgc(vec& x, const vec& p, int nrow, int ncol);
+std::vector<std::list<float> > cpp_rank_matrix_dgc(vec& x, const vec& p, int nrow, int ncol);
 RcppExport SEXP _wilcoxauc_cpp_rank_matrix_dgc(SEXP xSEXP, SEXP pSEXP, SEXP nrowSEXP, SEXP ncolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -109,12 +109,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_rank_matrix_dense
-mat cpp_rank_matrix_dense(mat& X);
+Rcpp::List cpp_rank_matrix_dense(mat X);
 RcppExport SEXP _wilcoxauc_cpp_rank_matrix_dense(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< mat >::type X(XSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_rank_matrix_dense(X));
     return rcpp_result_gen;
 END_RCPP
