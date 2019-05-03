@@ -6,7 +6,6 @@
 using namespace Rcpp;
 
 // [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(openmp)]]
 
 using namespace std;
 
@@ -193,42 +192,3 @@ mat cpp_nnzeroGroups_dgc_T(const vec& p, const vec& i, int ncol, int nrow, const
     return res;
 }
 
-
-
-
-/*
-// [[Rcpp::export]]
-int cpp_in_place_rank_min(vec& v_temp, int idx_begin, int idx_end) {
-    if (idx_begin > idx_end) return 1;
-    std::vector<pair<float, size_t> > v_sort(idx_end - idx_begin + 1);
-    for (size_t i = idx_begin; i <= idx_end; i++) {
-        v_sort[i - idx_begin] = make_pair(v_temp[i], i - idx_begin);
-    }
-    
-    sort(v_sort.begin(), v_sort.end());
-
-    float rank_min = 0, n = 1;
-    size_t i;
-    for (i = 1U; i < v_sort.size(); i++) {
-        if (v_sort[i].first != v_sort[i - 1].first) {
-            // if current val != prev val
-            // set prev val to something
-            for (unsigned j = 0; j < n; j++) {
-                v_temp[v_sort[i - 1 - j].second + idx_begin] = rank_min + 1;  
-            }            
-            // restart count ranks
-            rank_min = i;
-            n = 1;
-        } else {
-            // if curr val is a tie, 
-            // don't set anything yet
-            n++;
-        }
-    }
-    // set the last element(s)
-    for (unsigned j = 0; j < n; j++)
-        v_temp[v_sort[i - 1 - j].second + idx_begin] = rank_min + 1;
-  return 0;
-}
-
-*/
