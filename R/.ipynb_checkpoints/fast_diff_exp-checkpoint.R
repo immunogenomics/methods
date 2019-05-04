@@ -54,7 +54,7 @@ fast_diff_exp <- function(X, y, verbose=TRUE) {
     pvals <- compute_pval(ustat, rank_res$ties, ncol(X), n1n2) 
     fdr <- apply(pvals, 2, function(x) p.adjust(x, 'BH'))
 
-    ### Auxiliary Statistics (AvgExpr, PctIn, LFC)
+    ### Auxiliary Statistics (AvgExpr, PctIn, LFC, etc)
     group_sums <- sumGroups(X, y, 1)
     group_nnz <- nnzeroGroups(X, y, 1)
     group_pct <- sweep(group_nnz, 1, as.numeric(table(y)), "/") %>% t()
@@ -69,8 +69,6 @@ fast_diff_exp <- function(X, y, verbose=TRUE) {
         group_means[, g] - ((cs - group_sums[g, ]) / (length(y) - gs[g]))
     }))
 
-                 
-    
     res_list <- list(auc = auc, 
                 pval = pvals,
                 padj = fdr, 
