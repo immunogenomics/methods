@@ -1,11 +1,12 @@
-#' wilcoxauc
+#' presto
 #' 
 #' Fast differential expression
 #' 
+#' @name presto
 #' @docType package
-#' @author me
+#' @useDynLib presto
 #' @import Rcpp 
 #' @importFrom Rcpp evalCpp
-#' @useDynLib wilcoxauc
-#' @name wilcoxauc
+#' @importFrom Rcpp sourceCpp
+#' @importFrom Rcpp loadModule
 NULL

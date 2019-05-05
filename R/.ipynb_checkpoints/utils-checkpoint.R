@@ -1,13 +1,13 @@
-tidy_results <- function(wide_res, genes, groups) {
+tidy_results <- function(wide_res, features, groups) {
     res <- Reduce(cbind,
         lapply(names(wide_res), function(label) {
             res <- wide_res[[label]]
             colnames(res) <- paste(label, groups, sep = '.')
             res
         })) %>% data.frame()
-    res$gene <- genes
+    res$feature <- features
     res %>% 
-        tidyr::gather(key, val, -gene) %>% 
+        tidyr::gather(key, val, -feature) %>% 
         tidyr::separate(key, c('metric', 'group'), '[[.]]') %>% 
         tidyr::spread(metric, val) 
 }
@@ -15,7 +15,7 @@ tidy_results <- function(wide_res, genes, groups) {
 top_markers <- function(res, n=10, auc_min=.5, pval_max=1, fdr_max=1) {
     x <- res %>% 
         subset(pval < pval_max & padj < fdr_max &  auc > auc_min) %>% 
-        dplyr::select(gene, group, auc)
+        dplyr::select(feature, group, auc)
 
     data.table(x)[
         ,
@@ -23,7 +23,7 @@ top_markers <- function(res, n=10, auc_min=.5, pval_max=1, fdr_max=1) {
         by = group
     ] %>% 
         dplyr::select(-auc) %>% 
-        tidyr::spread(group, gene)
+        tidyr::spread(group, feature)
 }
 
 

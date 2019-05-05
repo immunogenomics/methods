@@ -1,8 +1,8 @@
+#include <RcppArmadillo.h>
+#include <Rcpp.h>
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <omp.h>
-#include "wilcoxauc_types.h"
 using namespace Rcpp;
 
 // [[Rcpp::depends(RcppArmadillo)]]
@@ -10,11 +10,10 @@ using namespace Rcpp;
 using namespace std;
 
 
-
 // [[Rcpp::export]]
-mat cpp_sumGroups_dgc(const vec& x, const uvec& p, const vec& i, unsigned ncol, const uvec& groups, unsigned ngroups) {
+arma::mat cpp_sumGroups_dgc(const arma::vec& x, const arma::uvec& p, const arma::vec& i, unsigned ncol, const arma::uvec& groups, unsigned ngroups) {
     // Here, columns are genes
-    mat res = arma::zeros<mat>(ngroups, ncol);
+    arma::mat res = arma::zeros<arma::mat>(ngroups, ncol);
     for (unsigned c = 0; c < ncol; c++) {
         for (unsigned j = p[c]; j < p[c + 1]; j++) {
             // i[j] gives the row num
@@ -26,9 +25,8 @@ mat cpp_sumGroups_dgc(const vec& x, const uvec& p, const vec& i, unsigned ncol, 
 }
 
 // [[Rcpp::export]]
-mat cpp_sumGroups_dgc_T(const vec& x, const vec& p, const vec& i, int ncol, int nrow, const uvec& groups, int ngroups) {
-    // Here, columns are samples
-    mat res = arma::zeros<mat>(ngroups, nrow);
+arma::mat cpp_sumGroups_dgc_T(const arma::vec& x, const arma::vec& p, const arma::vec& i, int ncol, int nrow, const arma::uvec& groups, int ngroups) {
+    arma::mat res = arma::zeros<arma::mat>(ngroups, nrow);
     for (int c = 0; c < ncol; c++) {
         for (int j = p[c]; j < p[c + 1]; j++) {
             // i[j] gives the row num
@@ -40,25 +38,19 @@ mat cpp_sumGroups_dgc_T(const vec& x, const vec& p, const vec& i, int ncol, int 
 }
 
 // [[Rcpp::export]]
-mat cpp_sumGroups_dense(const mat& X, const uvec& groups, unsigned ngroups) {
-    // Here, columns are genes
-    mat res = arma::zeros<mat>(ngroups, X.n_cols);
+arma::mat cpp_sumGroups_dense(const arma::mat& X, const arma::uvec& groups, unsigned ngroups) {
+    arma::mat res = arma::zeros<arma::mat>(ngroups, X.n_cols);
     for (unsigned r = 0; r < X.n_rows; r++) {
-    // for (unsigned c = 0; c < X.n_cols; c++) {
         res.row(groups[r]) += sum(X.row(r), 0);
-    //    }
     }    
     return res;
 }
 
 // [[Rcpp::export]]
-mat cpp_sumGroups_dense_T(const mat& X, const uvec& groups, unsigned ngroups) {
-    // Here, columns are genes
-    mat res = arma::zeros<mat>(ngroups, X.n_rows);
+arma::mat cpp_sumGroups_dense_T(const arma::mat& X, const arma::uvec& groups, unsigned ngroups) {
+    arma::mat res = arma::zeros<arma::mat>(ngroups, X.n_rows);
     for (unsigned c = 0; c < X.n_cols; c++) {
-    // for (unsigned c = 0; c < X.n_cols; c++) {
         res.row(groups[c]) += sum(X.col(c), 1).t();
-    //    }
     }    
     return res;
 }
@@ -66,8 +58,8 @@ mat cpp_sumGroups_dense_T(const mat& X, const uvec& groups, unsigned ngroups) {
 
 
 // [[Rcpp::export]]
-mat cpp_nnzeroGroups_dgc(const uvec& p, const vec& i, unsigned ncol, const uvec& groups, unsigned ngroups) {
-    mat res = arma::zeros<mat>(ngroups, ncol);
+arma::mat cpp_nnzeroGroups_dgc(const arma::uvec& p, const arma::vec& i, unsigned ncol, const arma::uvec& groups, unsigned ngroups) {
+    arma::mat res = arma::zeros<arma::mat>(ngroups, ncol);
     for (unsigned c = 0; c < ncol; c++) {
         for (unsigned j = p[c]; j < p[c + 1]; j++) {
             res(groups[i[j]], c)++;
@@ -78,7 +70,7 @@ mat cpp_nnzeroGroups_dgc(const uvec& p, const vec& i, unsigned ncol, const uvec&
 
 
 // [[Rcpp::export]]
-std::list<float> cpp_in_place_rank_mean(vec& v_temp, int idx_begin, int idx_end) {
+std::list<float> cpp_in_place_rank_mean(arma::vec& v_temp, int idx_begin, int idx_end) {
     std::list<float> ties;
     
     if (idx_begin > idx_end) return ties;
@@ -119,7 +111,7 @@ std::list<float> cpp_in_place_rank_mean(vec& v_temp, int idx_begin, int idx_end)
 
 
 // [[Rcpp::export]]
-std::vector<std::list<float> > cpp_rank_matrix_dgc(vec& x, const vec& p, int nrow, int ncol) { //, std::string method) {
+std::vector<std::list<float> > cpp_rank_matrix_dgc(arma::vec& x, const arma::vec& p, int nrow, int ncol) { //, std::string method) {
 //   omp_set_num_threads(8);
 //   #pragma omp parallel for
     vector<list<float> > ties(ncol);
@@ -136,7 +128,7 @@ std::vector<std::list<float> > cpp_rank_matrix_dgc(vec& x, const vec& p, int nro
 
 
 // [[Rcpp::export]]
-Rcpp::List cpp_rank_matrix_dense(mat X) {
+Rcpp::List cpp_rank_matrix_dense(arma::mat X) {
     // sizes of tied groups
     vector<list<float> > ties(X.n_cols);
     
@@ -179,9 +171,9 @@ Rcpp::List cpp_rank_matrix_dense(mat X) {
 
 
 // [[Rcpp::export]]
-mat cpp_nnzeroGroups_dgc_T(const vec& p, const vec& i, int ncol, int nrow, const uvec& groups, int ngroups) {
+arma::mat cpp_nnzeroGroups_dgc_T(const arma::vec& p, const arma::vec& i, int ncol, int nrow, const arma::uvec& groups, int ngroups) {
     // Here, columns are samples
-    mat res = arma::zeros<mat>(ngroups, nrow);
+    arma::mat res = arma::zeros<arma::mat>(ngroups, nrow);
     for (int c = 0; c < ncol; c++) {
         for (int j = p[c]; j < p[c + 1]; j++) {
             // i[j] gives the row num

@@ -1,4 +1,4 @@
 library(testthat)
-library(wilcoxauc)
+library(presto)
 
-test_check("wilcoxauc")
+test_check("presto")

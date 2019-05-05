@@ -22,7 +22,58 @@
 #' \item 
 #' }
 #' @export 
-fast_diff_exp <- function(X, y, verbose=TRUE) {
+wilcoxauc <- function(X, ...) {
+    UseMethod('wilcoxauc')
+}
+
+wilcoxauc.seurat <- function(X, ...) {
+    stop('wilcoxauc only implemented for Seurat Version 3, please upgrade to run.')
+}
+
+wilcoxauc.Seurat <- function(object, group_by=NULL, assay='data', seurat_assay='RNA') {
+    X <- Seurat::GetAssayData(object, assay=seurat_assay, slot=assay)
+    if (is.null(group_by)) {
+        y <- Seurat::Idents(object)
+    } else {
+        y <- Seurat::FetchData(object, group_by) %>% unlist %>% as.character()        
+    }
+#     return(y)
+    wilcoxauc(X, y)
+}
+
+
+# wilcoxauc.CellDataSet <- function(object, slot='exprs', group_by='Cluster') {
+#     X <- assayData(object)[[slot]]
+#     y <- phenoData(object)[[group_by]]
+#     wilcoxauc(X, y)    
+# }
+
+wilcoxauc.SingleCellExperiment <- function(object, group_by=NULL, assay=NULL) {
+    if (is.null(group_by)) {
+        stop('Must specify group_by with SingleCellExperiment')
+    } else if (!group_by %in% names(colData(object))) {
+        stop('group_by value is not defined in colData.')
+    }
+    y <- colData(object)[[group_by]]
+    
+    if (is.null(assay)) {
+        standard_assays <- c('normcounts', 'logcounts', 'cpm', 'tpm', 'weights', 'counts')
+        standard_assays <- factor(standard_assays, standard_assays)
+        available_assays <- names(assays(object))    
+        available_assays <- intersect(standard_assays, available_assays)
+        if (length(available_assays) == 0) {
+            stop('No assays in SingleCellExperiment object')
+        } else {
+            assay <- available_assays[1]
+        }    
+    } 
+    
+    X <- eval(call(assay, object))
+
+    wilcoxauc(X, y)
+}
+
+wilcoxauc.default <- function(X, y, verbose=TRUE) {
     ## Check and possibly correct input values
     if (is(X, 'dgeMatrix')) X <- as.matrix(X)
     if (is(X, 'data.frame')) X <- as.matrix(X)
@@ -38,7 +89,15 @@ fast_diff_exp <- function(X, y, verbose=TRUE) {
         message('Removing NA values from labels')
     }
     y <- y[idx_use]
-    X <- X[, idx_use]    
+    X <- X[, idx_use]
+    features_use <- which(apply(!is.na(X), 1, all))
+    if (verbose & length(features_use) < nrow(X)) {
+        message('Removing features with NA values')
+    }
+    X <- X[features_use, ]
+    if (is.null(row.names(X))) {
+        row.names(X) <- paste0('Feature', seq_len(nrow(X)))
+    }
     
     ## Compute primary statistics
     group.size <- as.numeric(table(y))
@@ -75,6 +134,7 @@ fast_diff_exp <- function(X, y, verbose=TRUE) {
                 pct_in = group_pct, 
                 pct_out = group_pct_out,
                 avgExpr = group_means, 
+                statistic = t(ustat),
                 logFC = lfc)
     return(tidy_results(res_list, row.names(X), levels(y)))
 }

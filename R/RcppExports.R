@@ -2,38 +2,38 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 cpp_sumGroups_dgc <- function(x, p, i, ncol, groups, ngroups) {
-    .Call('_wilcoxauc_cpp_sumGroups_dgc', PACKAGE = 'wilcoxauc', x, p, i, ncol, groups, ngroups)
+    .Call('_presto_cpp_sumGroups_dgc', PACKAGE = 'presto', x, p, i, ncol, groups, ngroups)
 }
 
 cpp_sumGroups_dgc_T <- function(x, p, i, ncol, nrow, groups, ngroups) {
-    .Call('_wilcoxauc_cpp_sumGroups_dgc_T', PACKAGE = 'wilcoxauc', x, p, i, ncol, nrow, groups, ngroups)
+    .Call('_presto_cpp_sumGroups_dgc_T', PACKAGE = 'presto', x, p, i, ncol, nrow, groups, ngroups)
 }
 
 cpp_sumGroups_dense <- function(X, groups, ngroups) {
-    .Call('_wilcoxauc_cpp_sumGroups_dense', PACKAGE = 'wilcoxauc', X, groups, ngroups)
+    .Call('_presto_cpp_sumGroups_dense', PACKAGE = 'presto', X, groups, ngroups)
 }
 
 cpp_sumGroups_dense_T <- function(X, groups, ngroups) {
-    .Call('_wilcoxauc_cpp_sumGroups_dense_T', PACKAGE = 'wilcoxauc', X, groups, ngroups)
+    .Call('_presto_cpp_sumGroups_dense_T', PACKAGE = 'presto', X, groups, ngroups)
 }
 
 cpp_nnzeroGroups_dgc <- function(p, i, ncol, groups, ngroups) {
-    .Call('_wilcoxauc_cpp_nnzeroGroups_dgc', PACKAGE = 'wilcoxauc', p, i, ncol, groups, ngroups)
+    .Call('_presto_cpp_nnzeroGroups_dgc', PACKAGE = 'presto', p, i, ncol, groups, ngroups)
 }
 
 cpp_in_place_rank_mean <- function(v_temp, idx_begin, idx_end) {
-    .Call('_wilcoxauc_cpp_in_place_rank_mean', PACKAGE = 'wilcoxauc', v_temp, idx_begin, idx_end)
+    .Call('_presto_cpp_in_place_rank_mean', PACKAGE = 'presto', v_temp, idx_begin, idx_end)
 }
 
 cpp_rank_matrix_dgc <- function(x, p, nrow, ncol) {
-    .Call('_wilcoxauc_cpp_rank_matrix_dgc', PACKAGE = 'wilcoxauc', x, p, nrow, ncol)
+    .Call('_presto_cpp_rank_matrix_dgc', PACKAGE = 'presto', x, p, nrow, ncol)
 }
 
 cpp_rank_matrix_dense <- function(X) {
-    .Call('_wilcoxauc_cpp_rank_matrix_dense', PACKAGE = 'wilcoxauc', X)
+    .Call('_presto_cpp_rank_matrix_dense', PACKAGE = 'presto', X)
 }
 
 cpp_nnzeroGroups_dgc_T <- function(p, i, ncol, nrow, groups, ngroups) {
-    .Call('_wilcoxauc_cpp_nnzeroGroups_dgc_T', PACKAGE = 'wilcoxauc', p, i, ncol, nrow, groups, ngroups)
+    .Call('_presto_cpp_nnzeroGroups_dgc_T', PACKAGE = 'presto', p, i, ncol, nrow, groups, ngroups)
 }
 
