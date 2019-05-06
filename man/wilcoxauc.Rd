@@ -2,14 +2,22 @@
 % Please edit documentation in R/wilcoxauc.R
 \name{wilcoxauc}
 \alias{wilcoxauc}
-\title{Fast Mann Whitney U Test and auROC}
+\title{Fast Wilcoxon rank sum test and auROC}
 \usage{
 wilcoxauc(X, ...)
 }
 \arguments{
-\item{Xt}{sample by feature matrix.}
+\item{X}{A feature-by-sample matrix, Seurat object, or SingleCellExperiment object}
 
-\item{cols}{vector of group labels.}
+\item{y}{vector of group labels.}
+
+\item{groups_use}{(optional) which groups from y vector to test.}
+
+\item{group_by}{(Seurat & SCE) name of groups variable ('e.g. Cluster').}
+
+\item{assay}{(Seurat & SCE) name of feature matrix slot (e.g. 'data' or 'logcounts').}
+
+\item{seurat_assay}{(Seurat) name of Seurat Assay (e.g. 'RNA').}
 
 \item{verbose}{boolean, TRUE for warnings and messages.}
 }
@@ -22,15 +30,12 @@ table with the following columns:
 }
 }
 \description{
-Compute auROC and p-value based on Gaussian approximation of 
-Mann Whitney U statistic
+Computes auROC and Wilcoxon p-value based on Gaussian approximation
 }
 \examples{
 
-data(wilcoxauc)
-res <- fast_diff_exp(exprs, y)
-## Also works on sparse matrices
-res <- fast_diff_exp(as(exprs, 'dgCMatrix'), y)
-head(res)
+library(presto)
+data(exprs)
+data(y)
 
 }

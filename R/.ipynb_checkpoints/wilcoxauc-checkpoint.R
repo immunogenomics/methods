@@ -1,19 +1,20 @@
-#' Fast Mann Whitney U Test and auROC
+#' Fast Wilcoxon rank sum test and auROC 
 #' 
-#' Compute auROC and p-value based on Gaussian approximation of 
-#' Mann Whitney U statistic
+#' Computes auROC and Wilcoxon p-value based on Gaussian approximation 
 #' 
-#' @param Xt sample by feature matrix. 
-#' @param cols vector of group labels. 
+#' @param X A feature-by-sample matrix, Seurat object, or SingleCellExperiment object
+#' @param y vector of group labels. 
+#' @param groups_use (optional) which groups from y vector to test. 
+#' @param group_by (Seurat & SCE) name of groups variable ('e.g. Cluster').
+#' @param assay (Seurat & SCE) name of feature matrix slot (e.g. 'data' or 'logcounts'). 
+#' @param seurat_assay (Seurat) name of Seurat Assay (e.g. 'RNA'). 
 #' @param verbose boolean, TRUE for warnings and messages. 
 #' 
 #' @examples
 #' 
-#' data(wilcoxauc)
-#' res <- fast_diff_exp(exprs, y)
-#' ## Also works on sparse matrices
-#' res <- fast_diff_exp(as(exprs, 'dgCMatrix'), y)
-#' head(res)
+#' library(presto)
+#' data(exprs)
+#' data(y)
 #' 
 #' @return table with the following columns: 
 #' \itemize{
@@ -30,15 +31,15 @@ wilcoxauc.seurat <- function(X, ...) {
     stop('wilcoxauc only implemented for Seurat Version 3, please upgrade to run.')
 }
 
-wilcoxauc.Seurat <- function(object, group_by=NULL, assay='data', seurat_assay='RNA') {
-    X <- Seurat::GetAssayData(object, assay=seurat_assay, slot=assay)
+wilcoxauc.Seurat <- function(object, group_by=NULL, assay='data', seurat_assay='RNA', groups_use=NULL) {
+    X_matrix <- Seurat::GetAssayData(object, assay=seurat_assay, slot=assay)
     if (is.null(group_by)) {
         y <- Seurat::Idents(object)
     } else {
         y <- Seurat::FetchData(object, group_by) %>% unlist %>% as.character()        
     }
 #     return(y)
-    wilcoxauc(X, y)
+    wilcoxauc(X_matrix, y, groups_use)
 }
 
 
@@ -48,7 +49,7 @@ wilcoxauc.Seurat <- function(object, group_by=NULL, assay='data', seurat_assay='
 #     wilcoxauc(X, y)    
 # }
 
-wilcoxauc.SingleCellExperiment <- function(object, group_by=NULL, assay=NULL) {
+wilcoxauc.SingleCellExperiment <- function(object, group_by=NULL, assay=NULL, groups_use=NULL) {
     if (is.null(group_by)) {
         stop('Must specify group_by with SingleCellExperiment')
     } else if (!group_by %in% names(colData(object))) {
@@ -68,12 +69,12 @@ wilcoxauc.SingleCellExperiment <- function(object, group_by=NULL, assay=NULL) {
         }    
     } 
     
-    X <- eval(call(assay, object))
+    X_matrix <- eval(call(assay, object))
 
-    wilcoxauc(X, y)
+    wilcoxauc(X_matrix, y, groups_use)
 }
 
-wilcoxauc.default <- function(X, y, groups_use, verbose=TRUE) {
+wilcoxauc.default <- function(X, y, groups_use=NULL, verbose=TRUE) {
     ## Check and possibly correct input values
     if (is(X, 'dgeMatrix')) X <- as.matrix(X)
     if (is(X, 'data.frame')) X <- as.matrix(X)
@@ -83,7 +84,7 @@ wilcoxauc.default <- function(X, y, groups_use, verbose=TRUE) {
     if (is(X, 'TsparseMatrix')) X <- as(X, 'dgCMatrix')
     
     if (ncol(X) != length(y)) stop("ERROR: number of columns of X does not match length of y")
-    if (!missing(groups_use)) {
+    if (!is.null(groups_use)) {
         idx_use <- which(y %in% groups_use)
         y <- y[idx_use]
         X <- X[, idx_use]
