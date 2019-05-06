@@ -65,6 +65,32 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_nnzeroGroups_dense
+arma::mat cpp_nnzeroGroups_dense(const arma::mat& X, const arma::uvec& groups, unsigned ngroups);
+RcppExport SEXP _presto_cpp_nnzeroGroups_dense(SEXP XSEXP, SEXP groupsSEXP, SEXP ngroupsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::uvec& >::type groups(groupsSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type ngroups(ngroupsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_nnzeroGroups_dense(X, groups, ngroups));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_nnzeroGroups_dense_T
+arma::mat cpp_nnzeroGroups_dense_T(const arma::mat& X, const arma::uvec& groups, unsigned ngroups);
+RcppExport SEXP _presto_cpp_nnzeroGroups_dense_T(SEXP XSEXP, SEXP groupsSEXP, SEXP ngroupsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::uvec& >::type groups(groupsSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type ngroups(ngroupsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_nnzeroGroups_dense_T(X, groups, ngroups));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_nnzeroGroups_dgc
 arma::mat cpp_nnzeroGroups_dgc(const arma::uvec& p, const arma::vec& i, unsigned ncol, const arma::uvec& groups, unsigned ngroups);
 RcppExport SEXP _presto_cpp_nnzeroGroups_dgc(SEXP pSEXP, SEXP iSEXP, SEXP ncolSEXP, SEXP groupsSEXP, SEXP ngroupsSEXP) {
@@ -108,12 +134,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_rank_matrix_dense
-Rcpp::List cpp_rank_matrix_dense(arma::mat X);
+Rcpp::List cpp_rank_matrix_dense(arma::mat& X);
 RcppExport SEXP _presto_cpp_rank_matrix_dense(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_rank_matrix_dense(X));
     return rcpp_result_gen;
 END_RCPP
@@ -140,6 +166,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_presto_cpp_sumGroups_dgc_T", (DL_FUNC) &_presto_cpp_sumGroups_dgc_T, 7},
     {"_presto_cpp_sumGroups_dense", (DL_FUNC) &_presto_cpp_sumGroups_dense, 3},
     {"_presto_cpp_sumGroups_dense_T", (DL_FUNC) &_presto_cpp_sumGroups_dense_T, 3},
+    {"_presto_cpp_nnzeroGroups_dense", (DL_FUNC) &_presto_cpp_nnzeroGroups_dense, 3},
+    {"_presto_cpp_nnzeroGroups_dense_T", (DL_FUNC) &_presto_cpp_nnzeroGroups_dense_T, 3},
     {"_presto_cpp_nnzeroGroups_dgc", (DL_FUNC) &_presto_cpp_nnzeroGroups_dgc, 5},
     {"_presto_cpp_in_place_rank_mean", (DL_FUNC) &_presto_cpp_in_place_rank_mean, 3},
     {"_presto_cpp_rank_matrix_dgc", (DL_FUNC) &_presto_cpp_rank_matrix_dgc, 4},

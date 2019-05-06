@@ -56,6 +56,32 @@ arma::mat cpp_sumGroups_dense_T(const arma::mat& X, const arma::uvec& groups, un
 }
 
 
+// [[Rcpp::export]]
+arma::mat cpp_nnzeroGroups_dense(const arma::mat& X, const arma::uvec& groups, unsigned ngroups) {
+    arma::mat res = arma::zeros<arma::mat>(ngroups, X.n_cols);
+    for (unsigned c = 0; c < X.n_cols; c++) {
+        for (unsigned r = 0; r < X.n_rows; r++) {
+            if (X(r, c) != 0)
+                res(groups[r], c)++;
+        }
+    }    
+    return res;
+}
+
+// [[Rcpp::export]]
+arma::mat cpp_nnzeroGroups_dense_T(const arma::mat& X, const arma::uvec& groups, unsigned ngroups) {
+    arma::mat res = arma::zeros<arma::mat>(ngroups, X.n_rows);
+    for (unsigned c = 0; c < X.n_cols; c++) {
+        for (unsigned r = 0; r < X.n_rows; r++) {
+            if (X(r, c) != 0)
+                res(groups[c], r)++;
+//             res.row(groups[c]) += sum(X.col(c), 1).t();
+        }
+    }    
+    return res;
+}
+
+
 
 // [[Rcpp::export]]
 arma::mat cpp_nnzeroGroups_dgc(const arma::uvec& p, const arma::vec& i, unsigned ncol, const arma::uvec& groups, unsigned ngroups) {
@@ -128,16 +154,16 @@ std::vector<std::list<float> > cpp_rank_matrix_dgc(arma::vec& x, const arma::vec
 
 
 // [[Rcpp::export]]
-Rcpp::List cpp_rank_matrix_dense(arma::mat X) {
+Rcpp::List cpp_rank_matrix_dense(arma::mat& X) {
     // sizes of tied groups
+    arma::inplace_trans(X);
     vector<list<float> > ties(X.n_cols);
     
+    std::vector<pair<float, size_t> > v_sort(X.n_rows);
     for (unsigned c = 0; c < X.n_cols; c++) {
-        std::vector<pair<float, size_t> > v_sort(X.n_rows);
         for (size_t i = 0; i < X.n_rows; i++) {
             v_sort[i] = make_pair(X.col(c)[i], i);
         }
-
         sort(v_sort.begin(), v_sort.end());
 
         float rank_sum = 0, n = 1;

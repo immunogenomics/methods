@@ -73,7 +73,7 @@ wilcoxauc.SingleCellExperiment <- function(object, group_by=NULL, assay=NULL) {
     wilcoxauc(X, y)
 }
 
-wilcoxauc.default <- function(X, y, verbose=TRUE) {
+wilcoxauc.default <- function(X, y, groups_use, verbose=TRUE) {
     ## Check and possibly correct input values
     if (is(X, 'dgeMatrix')) X <- as.matrix(X)
     if (is(X, 'data.frame')) X <- as.matrix(X)
@@ -83,18 +83,27 @@ wilcoxauc.default <- function(X, y, verbose=TRUE) {
     if (is(X, 'TsparseMatrix')) X <- as(X, 'dgCMatrix')
     
     if (ncol(X) != length(y)) stop("ERROR: number of columns of X does not match length of y")
+    if (!missing(groups_use)) {
+        idx_use <- which(y %in% groups_use)
+        y <- y[idx_use]
+        X <- X[, idx_use]
+    }
+    
     y <- factor(y)
     idx_use <- which(!is.na(y))
-    if (verbose & length(idx_use) < length(y)) {
-        message('Removing NA values from labels')
+    if (length(idx_use) < length(y)) {
+        y <- y[idx_use]
+        X <- X[, idx_use]
+        if (verbose) 
+            message('Removing NA values from labels')        
     }
-    y <- y[idx_use]
-    X <- X[, idx_use]
-    features_use <- which(apply(!is.na(X), 1, all))
-    if (verbose & length(features_use) < nrow(X)) {
-        message('Removing features with NA values')
-    }
-    X <- X[features_use, ]
+    
+    
+#     features_use <- which(apply(!is.na(X), 1, all))
+#     if (verbose & length(features_use) < nrow(X)) {
+#         message('Removing features with NA values')
+#     }
+#     X <- X[features_use, ]
     if (is.null(row.names(X))) {
         row.names(X) <- paste0('Feature', seq_len(nrow(X)))
     }
@@ -105,7 +114,8 @@ wilcoxauc.default <- function(X, y, verbose=TRUE) {
     if (is(X, 'dgCMatrix')) {
         rank_res <- rank_matrix(Matrix:::t(X))        
     } else {
-        rank_res <- rank_matrix(t(X))        
+        rank_res <- rank_matrix(X)
+#         rank_res <- rank_matrix(t(X))
     }
 
     ustat <- compute_ustat(rank_res$X_ranked, y, n1n2, group.size) 

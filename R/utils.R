@@ -123,9 +123,9 @@ nnzeroGroups.dgCMatrix <- function(X, y, MARGIN=2) {
 }
 
 nnzeroGroups.matrix <- function(X, y, MARGIN=2) {
-    if (MARGIN == 1) {
-        cpp_sumGroups_dense_T(X != 0, as.integer(y) - 1, length(unique(y)))        
+    if (MARGIN == 1) {        
+        cpp_nnzeroGroups_dense_T(X, as.integer(y) - 1, length(unique(y)))        
     } else {
-        cpp_sumGroups_dense(X != 0, as.integer(y) - 1, length(unique(y)))
+        cpp_nnzeroGroups_dense(X, as.integer(y) - 1, length(unique(y)))
     }
 }

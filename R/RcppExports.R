@@ -17,6 +17,14 @@ cpp_sumGroups_dense_T <- function(X, groups, ngroups) {
     .Call('_presto_cpp_sumGroups_dense_T', PACKAGE = 'presto', X, groups, ngroups)
 }
 
+cpp_nnzeroGroups_dense <- function(X, groups, ngroups) {
+    .Call('_presto_cpp_nnzeroGroups_dense', PACKAGE = 'presto', X, groups, ngroups)
+}
+
+cpp_nnzeroGroups_dense_T <- function(X, groups, ngroups) {
+    .Call('_presto_cpp_nnzeroGroups_dense_T', PACKAGE = 'presto', X, groups, ngroups)
+}
+
 cpp_nnzeroGroups_dgc <- function(p, i, ncol, groups, ngroups) {
     .Call('_presto_cpp_nnzeroGroups_dgc', PACKAGE = 'presto', p, i, ncol, groups, ngroups)
 }
