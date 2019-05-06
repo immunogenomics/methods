@@ -2,3 +2,6 @@ inst/doc
 .Rproj.user
 .Rhistory
 .RData
+src/*.so
+src/*.o
+
