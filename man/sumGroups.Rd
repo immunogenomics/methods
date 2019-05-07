@@ -2,10 +2,35 @@
 % Please edit documentation in R/utils.R
 \name{sumGroups}
 \alias{sumGroups}
-\title{X is samples by features}
+\alias{sumGroups.dgCMatrix}
+\alias{sumGroups.matrix}
+\title{sumGroups}
 \usage{
 sumGroups(X, y, MARGIN = 2)
+
+\method{sumGroups}{dgCMatrix}(X, y, MARGIN = 2)
+
+\method{sumGroups}{matrix}(X, y, MARGIN = 2)
+}
+\arguments{
+\item{X}{matrix}
+
+\item{y}{group labels}
+
+\item{MARGIN}{whether observations are rows (=2) or columns (=1)}
+}
+\value{
+Matrix of groups by features
 }
 \description{
-assumes that y is a factor with no missing values
+Utility function to sum over group labels
+}
+\examples{
+
+library(presto)
+data(exprs)
+data(y)
+sumGroups_res <- sumGroups(exprs, y, 1)
+sumGroups_res <- sumGroups(t(exprs), y, 2)
+
 }

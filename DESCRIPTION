@@ -1,17 +1,37 @@
 Package: presto
 Title: Fast Functions for Differential Expression using Wilcox and AUC
 Version: 0.99.0
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-Depends: dplyr, magrittr, Matrix
-License: What license is it under?
+Authors@R: c(
+    person("Ilya", "Korsunsky", email = "ilya.korsunsky@gmail.com", 
+        role = c("cre", "aut"), comment = c(ORCID = "0000-0003-4848-3948")),
+    person("Aparna", "Nathan", 
+        role = "aut"),
+    person("Nghia", "Millard", 
+        role = "aut", comment = c(ORCID = "0000-0002-0518-7674")),
+    person("Soumya", "Raychaudhuri", 
+        role = c("aut"), comment = c(ORCID = "0000-0002-1901-8265"))
+    )
+Description: Scalable implementation of the Wilcoxon rank sum test and auROC statistic. Interfaces to dense and sparse matrices, as well as genomics analysis frameworks Seurat and SingleCellExperiment. 
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
-LazyData: true
-Imports: Rcpp, dplyr, magrittr, Matrix
+Depends: R (>= 3.4.0), Rcpp
 LinkingTo: Rcpp, RcppArmadillo
+Imports: 
+    dplyr, 
+    methods,
+    tidyr, 
+    reshape2,
+    data.table,
+    tibble,
+    rlang,
+    Matrix
 RoxygenNote: 6.1.1
 Suggests: 
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    Seurat,
+    SingleCellExperiment, 
+    SummarizedExperiment,
+    broom
 VignetteBuilder: knitr

@@ -27,10 +27,6 @@ test_that('presto executes on all dense and sparse 2D inputs', {
     expect_equal(dim(res_dgc), c(N, 10))
     expect_true(all(!is.na(res_dgc)))
 
-    res_DF <- wilcoxauc(as(exprs, 'DataFrame'), y)
-    expect_equal(dim(res_DF), c(N, 10))
-    expect_true(all(!is.na(res_DF)))
-
     res_df <- wilcoxauc(as.data.frame(exprs), y)
     expect_equal(dim(res_df), c(N, 10))
     expect_true(all(!is.na(res_df)))
@@ -50,10 +46,10 @@ check_seurat3 <- function() {
 
 test_that('Seurat V3 interface works', {
     check_seurat3()
-    data(cell_lines_small_seurat_v3)
+    data(object_seurat)
     library(Seurat)
     
-    res <- wilcoxauc(cell_lines_small_seurat_v3, 'cell_type')
+    res <- wilcoxauc(object_seurat, 'cell_type')
     expect_equal(dim(res), c(40, 10))
     expect_true(all(!is.na(res)))
     
@@ -65,10 +61,10 @@ test_that('SingleCellExperiment interface works', {
         skip('SingleCellExperiment not available')
     } 
 
-    data(cell_lines_small_sce)
     library(SingleCellExperiment)
+    data(object_sce)
     
-    res <- wilcoxauc(cell_lines_small_sce, 'cell_type')
+    res <- wilcoxauc(object_sce, 'cell_type')
     expect_equal(dim(res), c(40, 10))
     expect_true(all(!is.na(res)))
     

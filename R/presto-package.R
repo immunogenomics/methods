@@ -6,7 +6,12 @@
 #' @docType package
 #' @useDynLib presto
 #' @import Rcpp 
-#' @importFrom Rcpp evalCpp
-#' @importFrom Rcpp sourceCpp
-#' @importFrom Rcpp loadModule
+#' @importClassesFrom Matrix dgCMatrix dgTMatrix dgeMatrix TsparseMatrix
+#' @importFrom methods as is
+#' @importFrom Matrix Matrix
+#' @importFrom stats p.adjust pnorm wilcox.test
+#' @importFrom utils head
+#' @importFrom Rcpp evalCpp sourceCpp loadModule
+#' @importFrom rlang .data
+#' @importFrom data.table .SD
 NULL

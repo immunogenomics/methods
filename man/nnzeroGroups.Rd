@@ -2,10 +2,35 @@
 % Please edit documentation in R/utils.R
 \name{nnzeroGroups}
 \alias{nnzeroGroups}
-\title{X is samples by features}
+\alias{nnzeroGroups.dgCMatrix}
+\alias{nnzeroGroups.matrix}
+\title{nnzeroGroups}
 \usage{
 nnzeroGroups(X, y, MARGIN = 2)
+
+\method{nnzeroGroups}{dgCMatrix}(X, y, MARGIN = 2)
+
+\method{nnzeroGroups}{matrix}(X, y, MARGIN = 2)
+}
+\arguments{
+\item{X}{matrix}
+
+\item{y}{group labels}
+
+\item{MARGIN}{whether observations are rows (=2) or columns (=1)}
+}
+\value{
+Matrix of groups by features
 }
 \description{
-assumes that y is a factor with no missing values
+Utility function to compute number of zeros-per-feature within group
+}
+\examples{
+
+library(presto)
+data(exprs)
+data(y)
+nnz_res <- nnzeroGroups(exprs, y, 1)
+nnz_res <- nnzeroGroups(t(exprs), y, 2)
+
 }
