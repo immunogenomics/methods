@@ -45,16 +45,16 @@ table with the following columns:
 \itemize{
 \item \strong{feature} - feature name (e.g. gene name).
 \item \strong{group} - group name.
-\item \strong{auc} - area under the receiver operator curve. 
 \item \strong{avgExpr} - mean value of feature in group. 
 \item \strong{logFC} - log fold change between observations in group vs out.
+\item \strong{statistic} - Wilcoxon rank sum U statistic. 
+\item \strong{auc} - area under the receiver operator curve. 
+\item \strong{pval} - nominal p value. 
 \item \strong{padj} - Benjamini-Hochberg adjusted p value. 
 \item \strong{pct_in} - Percent of observations in the group with non-zero
  feature value. 
 \item \strong{pct_out} - Percent of observations out of the group with 
 non-zero feature value. 
-\item \strong{pval} - nominal p value. 
-\item \strong{statistic} - Wilcoxon rank sum U statistic. 
 }
 }
 \description{

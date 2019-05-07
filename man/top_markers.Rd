@@ -4,7 +4,8 @@
 \alias{top_markers}
 \title{Get top n markers from wilcoxauc}
 \usage{
-top_markers(res, n = 10, auc_min = 0.5, pval_max = 1, padj_max = 1)
+top_markers(res, n = 10, auc_min = 0.5, pval_max = 1, padj_max = 1,
+  pct_in_min = 0, pct_out_max = 100)
 }
 \arguments{
 \item{res}{table returned by wilcoxauc() function.}
@@ -16,6 +17,12 @@ top_markers(res, n = 10, auc_min = 0.5, pval_max = 1, padj_max = 1)
 \item{pval_max}{filter features with pval > pval_max.}
 
 \item{padj_max}{filter features with padj > padj_max.}
+
+\item{pct_in_min}{Minimum percent (0-100) of observations with non-zero 
+entries in group.}
+
+\item{pct_out_max}{Maximum percent (0-100) of observations with non-zero 
+entries out of group.}
 }
 \value{
 table with the top n markers for each cluster.

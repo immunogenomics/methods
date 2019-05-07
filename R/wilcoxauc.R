@@ -129,8 +129,8 @@ wilcoxauc.default <- function(X, y, groups_use=NULL, verbose=TRUE, ...) {
     ## Check and possibly correct input values
     if (is(X, 'dgeMatrix')) X <- as.matrix(X)
     if (is(X, 'data.frame')) X <- as.matrix(X)
-    if (is(X, 'DataFrame')) X <- as.matrix(X)
-    if (is(X, 'data.table')) X <- as.matrix(X)
+    # if (is(X, 'DataFrame')) X <- as.matrix(X)
+    # if (is(X, 'data.table')) X <- as.matrix(X)
     if (is(X, 'dgTMatrix')) X <- as(X, 'dgCMatrix')
     if (is(X, 'TsparseMatrix')) X <- as(X, 'dgCMatrix')
     
@@ -168,7 +168,7 @@ wilcoxauc.default <- function(X, y, groups_use=NULL, verbose=TRUE, ...) {
     
     ## Compute primary statistics
     group.size <- as.numeric(table(y))
-    n1n2 <- group.size * (ncol(X) - group.size);
+    n1n2 <- group.size * (ncol(X) - group.size)
     if (is(X, 'dgCMatrix')) {
         rank_res <- rank_matrix(Matrix::t(X))        
     } else {
@@ -177,7 +177,7 @@ wilcoxauc.default <- function(X, y, groups_use=NULL, verbose=TRUE, ...) {
     }
 
     ustat <- compute_ustat(rank_res$X_ranked, y, n1n2, group.size) 
-    auc <- t(matrix(t(ustat / n1n2), ncol = ncol(ustat)))
+    auc <- t(ustat / n1n2)
     pvals <- compute_pval(ustat, rank_res$ties, ncol(X), n1n2) 
     fdr <- apply(pvals, 2, function(x) p.adjust(x, 'BH'))
 
@@ -217,7 +217,10 @@ wilcoxauc.default <- function(X, y, groups_use=NULL, verbose=TRUE, ...) {
 #' @param auc_min filter features with auc < auc_min. 
 #' @param pval_max filter features with pval > pval_max.
 #' @param padj_max  filter features with padj > padj_max.
-#' 
+#' @param pct_in_min Minimum percent (0-100) of observations with non-zero 
+#' entries in group.
+#' @param pct_out_max Maximum percent (0-100) of observations with non-zero 
+#' entries out of group.
 #' @examples
 #' 
 #' library(presto)
@@ -233,19 +236,31 @@ wilcoxauc.default <- function(X, y, groups_use=NULL, verbose=TRUE, ...) {
 #' 
 #' @return table with the top n markers for each cluster. 
 #' @export 
-top_markers <- function(res, n=10, auc_min=.5, pval_max=1, padj_max=1) {
-    x <- res %>% 
-        dplyr::filter(.data$pval < pval_max & .data$padj < padj_max &
-                          .data$auc > auc_min) %>% 
-        dplyr::select(.data$feature, .data$group, .data$auc)
-    
-    data.table::data.table(x)[
-        ,
-        head(.SD[order(-.data$auc)], n) %>% tibble::rowid_to_column('rank'), 
-        by = .data$group
-        ] %>% 
-        dplyr::select(-.data$auc) %>% 
-        tidyr::spread(.data$group, .data$feature)
+top_markers <- function(res, n=10, auc_min=0, pval_max=1, padj_max=1,
+                        pct_in_min=0, pct_out_max=100) {
+    res %>% 
+        dplyr::filter(.data$pval <= pval_max & .data$padj <= padj_max &
+                          .data$auc >= auc_min & pct_in >= pct_in_min &
+                          pct_out <= pct_out_max) %>%
+        dplyr::group_by(.data$group) %>%
+        dplyr::top_n(n = n, wt = .data$auc) %>% 
+        dplyr::mutate(rank = rank(-.data$auc, ties = 'random')) %>% 
+        dplyr::ungroup() %>% 
+        dplyr::select(.data$feature, .data$group, .data$rank) %>% 
+        tidyr::spread(.data$group, .data$feature, fill = NA)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

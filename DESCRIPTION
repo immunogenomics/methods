@@ -21,7 +21,6 @@ Imports:
     methods,
     tidyr, 
     reshape2,
-    data.table,
     tibble,
     rlang,
     Matrix

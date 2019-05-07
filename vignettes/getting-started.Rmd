@@ -27,12 +27,6 @@ explores more advanced use cases.
 
 To install the current stable release from CRAN:
 
-```{r message=FALSE, warning=FALSE, include=FALSE}
-options(digits=2)
-devtools::load_all('..')
-```
-
-
 ```{r, eval=FALSE}
 install.packages('presto')
 
@@ -45,6 +39,12 @@ library(devtools)
 install_github('immunogenomics/presto')
 
 ```
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+options(digits=2)
+library(presto)
+```
+
 
 # Input Types
 
@@ -141,8 +141,7 @@ group | name of group label.
 avgExpr | mean value of feature in group. 
 logFC | log fold change between observations in group vs out.
 statistic | Wilcoxon rank sum U statistic. 
-auc | area under the receiver operator curve. Ranges from 0 (down in group) 
-to 1 (up in group). 0.5 means that feature is not up or down in group. 
+auc | area under the receiver operator curve. 
 pval | nominal p value, from two-tailed Gaussian approximation of U statistic.
 padj | Benjamini-Hochberg adjusted p value. 
 pct_in | Percent of observations in the group with non-zero feature value. 
@@ -161,9 +160,18 @@ in group.
 
 ```{r}
 res <- wilcoxauc(exprs, y)
-top_markers(res, 10, auc_min = 0)
+top_markers(res, n = 10)
 
-res
+```
+
+We can also filter for some criteria. For instance, the top features must be 
+in at least 70% of all observations within the group. Note that not all groups
+have 10 markers that meet these criteria. 
+
+
+```{r}
+res <- wilcoxauc(exprs, y)
+top_markers(res, n = 10, auc_min = .5, pct_in_min = 70)
 
 ```
 
@@ -172,10 +180,31 @@ res
 
 ## Dense vs sparse
 
+Presto is optimized for dense and sparse matrix inputs. When possible, use 
+sparse inputs. In our toy dataset, almost 39% of elements are zeros. Thus, it 
+makes sense to cast it as a sparse dgCMatrix and run wilcoxauc on that. 
+
+```{r}
+sum(exprs == 0) / prod(dim(exprs))
+exprs_sparse <- as(exprs, 'dgCMatrix')
+head(wilcoxauc(exprs_sparse, y))
+
+```
+
 
 
 ## groups_use
 
+Sometimes, you don't want to test all groups in the dataset against all other 
+groups. For instance, I want to compare only observations in group 'A' to those
+in group 'B'. This is achieved with the groups_use argument. 
+
+```{r}
+res_AB <- wilcoxauc(exprs, y, groups_use = c('A', 'B'))
+head(res_AB)
+top_markers(res_AB)
+
+```
 
 
 
