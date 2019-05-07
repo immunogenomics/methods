@@ -26,8 +26,16 @@ tidy_results <- function(wide_res, features, groups) {
         # tidyr::gather(key, val, -feature) %>% 
         tidyr::separate(.data$variable, c('metric', 'group'), '[[.]]') %>% 
         tidyr::spread(.data$metric, .data$value) %>% 
-        dplyr::select(feature, group, avgExpr, logFC, statistic, auc, pval, 
-                      padj, pct_in, pct_out)
+        dplyr::select(.data$feature, 
+                      .data$group, 
+                      .data$avgExpr, 
+                      .data$logFC, 
+                      .data$statistic, 
+                      .data$auc, 
+                      .data$pval, 
+                      .data$padj, 
+                      .data$pct_in, 
+                      .data$pct_out)
 }
 
 

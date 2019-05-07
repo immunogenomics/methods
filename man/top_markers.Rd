@@ -4,7 +4,7 @@
 \alias{top_markers}
 \title{Get top n markers from wilcoxauc}
 \usage{
-top_markers(res, n = 10, auc_min = 0.5, pval_max = 1, padj_max = 1,
+top_markers(res, n = 10, auc_min = 0, pval_max = 1, padj_max = 1,
   pct_in_min = 0, pct_out_max = 100)
 }
 \arguments{
